@@ -49,9 +49,9 @@ class Department(db.Model):
 class Apponintment(db.Model):
     __tablename__ = 'appointment'
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(30))
-    time = db.Column(db.String(30))
-    status = db.Column(db.String(50), nullable=False, default="Booked") # booked, complted, cancle
+    date = db.Column(db.String(40))
+    time = db.Column(db.String(40))
+    status = db.Column(db.String(60), nullable=False, default="Booked") # booked, complted, cancle
     user_id = db.Column(db.Integer, db.ForeignKey('users.id') ) #patient id
     treatement_id = db.Column(db.Integer, db.ForeignKey('treatments.id'), unique=True,)            
     notes = db.Column(db.text)
