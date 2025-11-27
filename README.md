@@ -31,7 +31,7 @@ The system includes 6 main tables:
 ## 🚀 Installation & Setup
 
 1. Create the repository:
-git clone https://github.com/24f2006737-cpu/Hospital-Management-App.git
+git clone https://github.com/24f2006737/Hospital-Management-App.git
 cd Hospital-Management-App/hospital_management
 2. Create virtual environment:  python -m venv venv  venv\Scripts\activate # Windows
 3. Install dependencies: pip install flask flask-sqlalchemy werkzeug
