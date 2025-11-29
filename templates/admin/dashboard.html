@@ -59,22 +59,33 @@
             <span>Add Doctor</span>
         </a>
         
-        <a href="#" class="action">
+        <a href="{{ url_for('view_doctors') }}" class="action">
             <span class="action-icon">👨‍⚕️</span>
             <span>View Doctors</span>
         </a>
         
-        <a href="#" class="action">
+        <a href="{{ url_for('view_patients') }}" class="action">
+            <span class="action-icon">👥</span>
+            <span>View Patients</span>
+        </a>
+        
+        <a href="{{ url_for('view_appointments') }}" class="action">
             <span class="action-icon">📋</span>
             <span>Appointments</span>
         </a>
         
-        <a href="#" class="action">
+        <a href="{{ url_for('search_doctors') }}" class="action">
             <span class="action-icon">🔍</span>
-            <span>Search</span>
+            <span>Search Doctors</span>
+        </a>
+        
+        <a href="{{ url_for('search_patients') }}" class="action">
+            <span class="action-icon">🔎</span>
+            <span>Search Patients</span>
         </a>
     </div>
 </div>
+
 
 <!-- Logout -->
 <div class="logout">

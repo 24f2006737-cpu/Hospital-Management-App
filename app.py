@@ -211,7 +211,7 @@ def login():
     return render_template('login.html')
 
 
-###--------Register Route --------------------------###
+###-------------------------- Register Route --------------------------###
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration with role selection"""
@@ -303,6 +303,8 @@ def admin_dashboard():
     total_patients = Patient.query.count()
     total_appointments = Appointment.query.count()
     pending_appointments = Appointment.query.filter_by(status='Booked').count()
+    # Debug line 
+    print(f"Stats: D={total_doctors}, P={total_patients}, A={total_appointments}, Pending={pending_appointments}")
     
     return render_template('admin/dashboard.html',
                          total_doctors=total_doctors, 
@@ -354,7 +356,124 @@ def add_doctor():
     departments = Department.query.all()
     return render_template('admin/add_doctor.html', departments=departments)
 
+##------------------------ ADMIN MANAGEMENT ROUTES ----------------###
 
+# View All Doctors
+@app.route('/admin/doctors')
+@admin_required
+def view_doctors():
+    """View all doctors"""
+    doctors = Doctor.query.all()
+    return render_template('admin/view_doctors.html', doctors=doctors)
+
+
+# Update Doctor
+@app.route('/admin/edit-doctor/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def edit_doctor(id):
+    """Edit doctor details"""
+    doctor = Doctor.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        doctor.name = request.form['name']
+        doctor.specialization = request.form['specialization']
+        doctor.contact = request.form['contact']
+        
+        db.session.commit()
+        flash(f'Doctor {doctor.name} updated successfully!', 'success')
+        return redirect(url_for('view_doctors'))
+    
+    departments = Department.query.all()
+    return render_template('admin/edit_doctor.html', doctor=doctor, departments=departments)
+
+
+# Delete Doctor
+@app.route('/admin/delete-doctor/<int:id>')
+@admin_required
+def delete_doctor(id):
+    """Delete doctor"""
+    doctor = Doctor.query.get_or_404(id)
+    
+    # Also delete associated user account
+    user = User.query.filter_by(username=doctor.name).first()
+    if user:
+        db.session.delete(user)
+    
+    db.session.delete(doctor)
+    db.session.commit()
+    
+    flash(f'Doctor removed from system!', 'success')
+    return redirect(url_for('view_doctors'))
+
+
+# View All Patients
+@app.route('/admin/patients')
+@admin_required
+def view_patients():
+    """View all patients"""
+    patients = Patient.query.all()
+    return render_template('admin/view_patients.html', patients=patients)
+
+
+# Delete Patient
+@app.route('/admin/delete-patient/<int:id>')
+@admin_required
+def delete_patient(id):
+    """Delete patient"""
+    patient = Patient.query.get_or_404(id)
+    
+    db.session.delete(patient)
+    db.session.commit()
+    
+    flash('Patient removed from system!', 'success')
+    return redirect(url_for('view_patients'))
+
+
+# View All Appointments
+@app.route('/admin/appointments')
+@admin_required
+def view_appointments():
+    """View all appointments"""
+    appointments = Appointment.query.order_by(Appointment.date.desc()).all()
+    return render_template('admin/view_appointments.html', appointments=appointments)
+
+
+# Search Doctors
+@app.route('/admin/search-doctors', methods=['GET', 'POST'])
+@admin_required
+def search_doctors():
+    """Search doctors by name or specialization"""
+    if request.method == 'POST':
+        search_term = request.form['search']
+        
+        # Search by name or specialization
+        doctors = Doctor.query.filter(
+            (Doctor.name.like(f'%{search_term}%')) | 
+            (Doctor.specialization.like(f'%{search_term}%'))
+        ).all()
+        
+        return render_template('admin/search_doctors.html', doctors=doctors, search_term=search_term)
+    
+    return render_template('admin/search_doctors.html', doctors=[], search_term='')
+
+
+# Search Patients
+@app.route('/admin/search-patients', methods=['GET', 'POST'])
+@admin_required
+def search_patients():
+    """Search patients by name, ID or contact"""
+    if request.method == 'POST':
+        search_term = request.form['search']
+        
+        # Search by name or contact
+        patients = Patient.query.filter(
+            (Patient.name.like(f'%{search_term}%')) | 
+            (Patient.contact.like(f'%{search_term}%'))
+        ).all()
+        
+        return render_template('admin/search_patients.html', patients=patients, search_term=search_term)
+    
+    return render_template('admin/search_patients.html', patients=[], search_term='')
 
 
 
@@ -371,7 +490,7 @@ def patient_dashboard():
 
 
 ###--------------------------- Doctor Routes -------------------###
-@app.route('/doctor/dashboard')  # ✅ Fixed URL
+@app.route('/doctor/dashboard')  
 @doctor_required
 def doctor_dashboard():
     """Doctor Dashboard"""

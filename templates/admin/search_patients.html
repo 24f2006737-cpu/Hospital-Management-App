@@ -1,0 +1,172 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}Search Patients{% endblock %}
+
+{% block content %}
+
+<div class="header">
+    <h1>🔍 Search Patients</h1>
+</div>
+
+<div class="search-container">
+    <form method="POST">
+        <input type="text" 
+               name="search" 
+               placeholder="Search by name, ID or contact..." 
+               required>
+        <button type="submit">🔍 Search</button>
+    </form>
+</div>
+
+{% if search_term %}
+<div class="results">
+    <h3>Search Results for: "{{ search_term }}"</h3>
+    
+    {% if patients %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient.id }}</td>
+                <td>{{ patient.name }}</td>
+                <td>{{ patient.age }}</td>
+                <td>{{ patient.gender }}</td>
+                <td>{{ patient.contact }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">No patients found matching "{{ search_term }}"</p>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="actions">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn">← Back to Dashboard</a>
+</div>
+
+<style>
+body {
+    background: #f5f7fa;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background: #34495e;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.search-container form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.search-container button {
+    padding: 12px 30px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background: #2980b9;
+}
+
+.results {
+    background: white;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.results h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #34495e;
+    color: white;
+}
+
+tr:hover {
+    background: #f8f9fa;
+}
+
+.no-data {
+    text-align: center;
+    color: #7f8c8d;
+    padding: 40px;
+}
+
+.actions {
+    text-align: center;
+    margin: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    background: #7f8c8d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #5f6c6d;
+    color: white;
+}
+</style>
+
+{% endblock %}

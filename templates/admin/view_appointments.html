@@ -1,0 +1,69 @@
+
+{% extends "base.html" %}
+
+{% block title %}All Appointments{% endblock %}
+
+{% block content %}
+
+<div class="header">
+    <h1>📅 All Appointments</h1>
+    <p>View upcoming and past appointments</p>
+</div>
+
+<div class="actions">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn">← Back</a>
+</div>
+
+<div class="table-container">
+    {% if appointments %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for apt in appointments %}
+            <tr>
+                <td>{{ apt.id }}</td>
+                <td>{{ apt.patient.name }}</td>
+                <td>{{ apt.doctor.name }}</td>
+                <td>{{ apt.date }}</td>
+                <td>{{ apt.time }}</td>
+                <td>
+                    <span class="badge {{ 'badge-green' if apt.status == 'Completed' else 'badge-blue' }}">
+                        {{ apt.status }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">No appointments found.</p>
+    {% endif %}
+</div>
+
+<style>
+body { background: #f5f7fa; font-family: Arial, sans-serif; }
+.header { background: #34495e; color: white; padding: 30px; text-align: center; border-radius: 10px; margin: 20px; }
+.btn { padding: 10px 20px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 5px; margin: 20px; display: inline-block; }
+.table-container { background: white; margin: 20px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background: #34495e; color: white; }
+tr:hover { background: #f8f9fa; }
+.badge { padding: 5px 10px; border-radius: 15px; font-size: 0.85rem; color: white; }
+.badge-green { background: #27ae60; }
+.badge-blue { background: #3498db; }
+.no-data { text-align: center; color: #7f8c8d; padding: 40px; }
+</style>
+
+{% endblock %}
+
+
